@@ -1,16 +1,32 @@
 
 export const getAnglesFromPose = ( { keypoints } ) => {
-    
+
     return [
-        find_angle(keypoints[5].position, keypoints[9].position, keypoints[7].position),    // Left wrist, elbow, shoulder
-        find_angle(keypoints[6].position, keypoints[10].position, keypoints[8].position),   // Right wrist, elbow, shoulder
-        find_angle(keypoints[7].position, keypoints[11].position, keypoints[5].position),    // Left elbow, shoulder, hip
-        find_angle(keypoints[8].position, keypoints[12].position, keypoints[6].position),    // Right elbow, shoulder, hip
-        find_angle(keypoints[5].position, keypoints[13].position, keypoints[11].position),    // Left shoulder, hip, knee
-        find_angle(keypoints[6].position, keypoints[14].position, keypoints[12].position),    // Right shoulder, hip, knee
-        find_angle(keypoints[11].position, keypoints[15].position, keypoints[13].position),    // Left hip, knee, ankle
-        find_angle(keypoints[12].position, keypoints[16].position, keypoints[14].position)    // Right hip, knee, ankle
+        find_angle_aux( keypoints, 5, 9, 7),     // Left wrist, elbow, shoulder
+        find_angle_aux( keypoints, 6, 10, 8),    // Right wrist, elbow, shoulder
+        find_angle_aux( keypoints, 7, 11, 5),    // Left elbow, shoulder, hip
+        find_angle_aux( keypoints, 8, 12, 6),    // Right elbow, shoulder, hip
+        find_angle_aux( keypoints, 5, 13, 11),   // Left shoulder, hip, knee
+        find_angle_aux( keypoints, 6, 14, 12),   // Right shoulder, hip, knee
+        find_angle_aux( keypoints, 11, 15, 13),  // Left hip, knee, ankle
+        find_angle_aux( keypoints, 12, 16, 14),  // Right hip, knee, ankle
     ]
+}
+
+const find_angle_aux = ( keypoints, index_p0, index_p1, index_c) => {
+
+    const pos_p0 = keypoints[index_p0].position;
+    const pos_p1 = keypoints[index_p1].position;
+    const pos_c  = keypoints[index_c].position;
+
+    const accuracy_p0 = keypoints[index_p0].score;
+    const accuracy_p1 = keypoints[index_p1].score;
+    const accuracy_c  = keypoints[index_c].score;
+
+    return {
+        angle: find_angle(pos_p0, pos_p1, pos_c),
+        min_accuracy: Math.min( accuracy_p0, accuracy_p1, accuracy_c)
+    }
 }
 
 /**
